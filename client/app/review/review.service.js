@@ -120,7 +120,6 @@ angular.module('pitchPerfectApp')
       $http.put('/api/reviews' + '/' + createReviewData._id, createReviewData)
         .success(function(updatedReview) {
 
-          console.log('REVIEW Updated on DONE', updatedReview);
 
           // Assemble the data to be updated in the UserDeck
           var paramsToUpdate = {};

@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Review = require('./review.model');
 var User = require('../user/user.model');
+var Response = require('../response/response.model');
 
 // Get list of reviews
 exports.index = function(req, res) {
@@ -17,7 +18,7 @@ exports.index = function(req, res) {
 
 // Get a single review
 exports.show = function(req, res) {
-  console.log("Grabbing single review");
+
   Review.findById(req.params.id, function(err, review) {
     if (err) {
       return handleError(res, err);
@@ -35,7 +36,7 @@ exports.create = function(req, res) {
   req.body.userId = req.user._id;
 
   var reviewParams = req.body;
-
+  // Grab reviewer's Name
   User.findById(req.body.author, function(err, user) {
     if (err) {
       return handleError(res, err);
@@ -43,13 +44,18 @@ exports.create = function(req, res) {
     if (!user) {
       return res.send(404);
     }
-
+    // Add to model params
     reviewParams.authorName = user.name;
+    // Create new model
     var review = new Review(reviewParams);
     review.save(function(err, review) {
-      if (err) {
-        return handleError(res, err);
-      }
+      if (err) return err;
+      if (!user) return res.send(404);
+      //Push this review to response.reviews []
+      Response.findById(review.responseId, function(err, response){
+          response.reviews.push(review._id);
+          response.save();
+      });
       return res.json(201, review);
     });
   });

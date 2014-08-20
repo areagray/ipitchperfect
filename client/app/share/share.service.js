@@ -44,7 +44,7 @@ angular.module('pitchPerfectApp')
     // Create response
     $http.post('/api/reviews', review)
       .success(function() {
-        // Review returned above if needed
+        //success
       });
   };
 

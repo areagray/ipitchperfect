@@ -8,6 +8,7 @@ var ResponseSchema = new Schema({
   questionId: {type: Schema.Types.ObjectId, ref: 'Question'},
   videoId: {type: Schema.Types.ObjectId, ref: 'Video'},
   userDeckId: {type: Schema.Types.ObjectId, ref: 'Userdeck'},
+  reviews: [{type: Schema.Types.ObjectId, ref: 'Review'}],
   questionTitle: String,
   description: String,
   createdAt: { type: Date, default: Date.now },
