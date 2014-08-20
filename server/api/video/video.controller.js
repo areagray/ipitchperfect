@@ -25,8 +25,10 @@ if (config.env === 'development') {
 
 // Get list of videos
 exports.index = function(req, res) {
-  Video.find(function (err, videos) {
-    if(err) { return handleError(res, err); }
+  Video.find(function(err, videos) {
+    if (err) {
+      return handleError(res, err);
+    }
     return res.json(200, videos);
   });
 };
@@ -37,28 +39,26 @@ exports.show = function(req, res) {
   // Expects video _id passed in URI
   // Example:  ipitchperfect/videos/url/53e40bd2f32ff0ea28a
 
-  console.log('in video url getter');
-
   var videoName = req.params.id + '.webm';
 
   var blobService = azure.createBlobService(AZ_ACCT, AZ_KEY, AZ_HOST);
 
   //create a SAS that expires in 45 mins
   var sharedAccessPolicy = {
-      AccessPolicy: {
-              Start: azure.date.minutesFromNow(-5),
-              Expiry: azure.date.minutesFromNow(45),
-              Permissions: azure.Constants.BlobConstants.SharedAccessPermissions.READ
-          }
+    AccessPolicy: {
+      Start: azure.date.minutesFromNow(-5),
+      Expiry: azure.date.minutesFromNow(45),
+      Permissions: azure.Constants.BlobConstants.SharedAccessPermissions.READ
+    }
   };
 
   // Generate signed URL, temporary access to the video
   var sasUrl = blobService.getBlobUrl('vds1', videoName, sharedAccessPolicy);
 
-  console.log('sas url is ', sasUrl);
-
   // Return VideoURL to client
-  res.json(200, {url: sasUrl});
+  res.json(200, {
+    url: sasUrl
+  });
 
 };
 
@@ -67,16 +67,20 @@ exports.create = function(req, res) {
 
   req.body.userId = req.user._id;
 
-//This all happens after we get a video _id from mongo
+  //This all happens after we get a video _id from mongo
   Video.create(req.body, function(err, video) {
 
-    if(err) { return handleError(res, err); }
+    if (err) {
+      return handleError(res, err);
+    }
     // Use video _id as filename
-    var videoId  = video.id;
+    var videoId = video.id;
 
     var blobService = azure.createBlobService(AZ_ACCT, AZ_KEY, AZ_HOST);
     // Use busboy to parse multi-part form request
-    var busboy = new Busboy({headers: req.headers});
+    var busboy = new Busboy({
+      headers: req.headers
+    });
 
     // Initiate form processing
     req.pipe(busboy);
@@ -104,13 +108,21 @@ exports.create = function(req, res) {
 
 // Updates an existing video in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Video.findById(req.params.id, function (err, video) {
-    if (err) { return handleError(res, err); }
-    if(!video) { return res.send(404); }
+  if (req.body._id) {
+    delete req.body._id;
+  }
+  Video.findById(req.params.id, function(err, video) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!video) {
+      return res.send(404);
+    }
     var updated = _.merge(video, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
+    updated.save(function(err) {
+      if (err) {
+        return handleError(res, err);
+      }
       return res.json(200, video);
     });
   });
@@ -118,11 +130,17 @@ exports.update = function(req, res) {
 
 // Deletes a video from the DB.
 exports.destroy = function(req, res) {
-  Video.findById(req.params.id, function (err, video) {
-    if(err) { return handleError(res, err); }
-    if(!video) { return res.send(404); }
+  Video.findById(req.params.id, function(err, video) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!video) {
+      return res.send(404);
+    }
     video.remove(function(err) {
-      if(err) { return handleError(res, err); }
+      if (err) {
+        return handleError(res, err);
+      }
       return res.send(204);
     });
   });

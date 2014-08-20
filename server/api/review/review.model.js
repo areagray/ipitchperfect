@@ -9,6 +9,7 @@ var ReviewSchema = new Schema({
   questionId: {type: Schema.Types.ObjectId, ref: 'Question'},
   videoId: {type: Schema.Types.ObjectId, ref: 'Video'},
   author: {type: Schema.Types.ObjectId, ref: 'User'}, // whom invited to review
+  authorName: String,
   userDeckId:{type: Schema.Types.ObjectId, ref: 'Userdeck'},
   completed: Boolean,                                             // Task completed ?
   annotations: {type: Array, default: []},                                           // when task completed.

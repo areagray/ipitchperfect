@@ -9,7 +9,7 @@ angular.module('pitchPerfectApp')
     console.log('review context COMING IN is  ', reviewContext);
 
 
-    if (!reviewContext.targetResponseId){
+    if (!reviewContext.targetResponseId) {
       console.log('no target response, going home');
       $state.go('home');
     }
@@ -73,12 +73,12 @@ angular.module('pitchPerfectApp')
     $scope.addAnnotation = function() {
       popcorn.pause();
       $scope.stagedAnnotation.timelineActual = popcorn.currentTime();
+      $scope.stagedAnnotation.authorName = reviewContext.authorName;
     };
 
     // Collect the annotation, clear the text entry field
     $scope.saveAnnotation = function(annotationText) {
       $scope.stagedAnnotation.description = annotationText;
-
       $scope.allAnnotations.push($scope.stagedAnnotation);
       $scope.stagedAnnotation = {};
       $scope.annotationText = '';
